@@ -6,6 +6,17 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>test home page</h1>
+    <h1>Welcome to placeholder name!</h1>
+
+    <h2>Login</h2>
+
+    <form method="post" action="{% url 'login' %}"> <!--Login prompt-->
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="hidden" name="next" value="{% url 'feed' %}">
+
+        <button type="submit">Login</button>
+    </form>
 </body>
 </html>
