@@ -20,7 +20,7 @@ class CustomLoginForm(AuthenticationForm):
                 email__iexact=username_or_email
             ).first()
 
-            if user:
+            if user: #get username from provided username/email
                 username_or_email = user.get_username()
 
             self.user_cache = authenticate( #authenticate with given username/email and password
