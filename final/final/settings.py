@@ -124,3 +124,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "home" #where to go if need login
 LOGIN_REDIRECT_URL = "feed" #where to go after login
 LOGOUT_REDIRECT_URL = "home" #Where to go after logout
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend" #send to backend and not to actual email, testing purposes
