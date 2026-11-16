@@ -2,40 +2,57 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+from .models import Post
+
 
 User = get_user_model()
 
 class CustomLoginForm(AuthenticationForm):
     username = forms.CharField(
-        label = "Username or Email", 
-        widget = forms.TextInput(attrs={"placeholder": "Enter username or email"}),
-        max_length = 20,
-        )
+        label = "Username or Email",
+        widget = forms.TextInput(attrs={
+            "placeholder": "Username or Email",
+            "class": "form-control"
+        }),
+        max_length=20,
+    )
 
     def clean(self):
-        username_or_email = self.cleaned_data.get("username") #retrieve username/password
+        username_or_email = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
         if username_or_email and password:
-            user = User.objects.filter( #search for username/email
+            user = User.objects.filter(
                 email__iexact=username_or_email
             ).first()
 
-            if user: #get username from provided username/email
+            if user:
                 username_or_email = user.get_username()
 
-            self.user_cache = authenticate( #authenticate with given username/email and password
+            self.user_cache = authenticate(
                 self.request,
-                username = username_or_email,
-                password = password
+                username=username_or_email,
+                password=password
             )
 
             if self.user_cache is None:
                 raise self.get_invalid_login_error()
 
-            self.confirm_login_allowed(self.user_cache) #check if user can login
+            self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["username"].widget.attrs.update({
+            "placeholder": "Username or Email",
+            "class": "form-control"
+        })
+
+        self.fields["password"].widget.attrs.update({
+            "placeholder": "Password",
+            "class": "form-control"
+        })
 
 class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField(required = True)
@@ -54,3 +71,9 @@ class CustomRegisterForm(UserCreationForm):
             raise forms.ValidationError("This email is already registered.")
 
         return email
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["title", "body"]
