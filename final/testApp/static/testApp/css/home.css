@@ -8,10 +8,9 @@ body {
 .login-card {
     width: 100%;
     max-width: 420px;
-    height: 480px;
+    height: auto;
     border: none;
     border-radius: 12px;
-    position: relative;
 }
 
 .login-logo {
